@@ -12,12 +12,15 @@ export class ToggleComponent implements OnInit {
   @Input() activeButton: string;
   @Output() outActivate = new EventEmitter<string>();
 
+  constructor() {
+
+  }
+
   ngOnInit() {
     if (!this.activeButton) {
       this.activeButton = this.buttonList[0];
     }
   }
-
   activate(button: string) {
     this.outActivate.emit(button);
   }

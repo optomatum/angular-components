@@ -11,7 +11,18 @@ import {ToggleComponent} from './ui/toggle/toggle.component';
 
 import {Database} from './database';
 import {TaskService} from './tasks/task.service';
-import {TaskListcontainerComponent} from './container/task-listcontainer/task-listcontainer.component';
+
+import {ProjectComponent} from './project/project/project.component';
+
+import {ProjectService} from './project/project.service';
+import {TabsComponent} from './ui/tabs/tabs/tabs.component';
+
+
+import {NavigationComponent} from './ui/navigation/navigation/navigation.component';
+import {TaskListContainerComponent} from './container/task-list-container/task-list-container.component';
+import {ProjectContainerComponent} from './container/project-container/project-container.component';
+import {NavigationSectionComponent} from './ui/navigation-section/navigation-section/navigation-section.component';
+import {NavigationItemComponent} from './ui/navigation-item/navigation-item.component';
 
 
 @NgModule({
@@ -22,7 +33,13 @@ import {TaskListcontainerComponent} from './container/task-listcontainer/task-li
     EnterTaskComponent,
     CheckboxComponent,
     ToggleComponent,
-    TaskListcontainerComponent,
+    TaskListContainerComponent,
+    ProjectComponent,
+    ProjectContainerComponent,
+    TabsComponent,
+    NavigationItemComponent,
+    NavigationSectionComponent,
+    NavigationComponent,
 
 
   ],
@@ -34,8 +51,10 @@ import {TaskListcontainerComponent} from './container/task-listcontainer/task-li
     })
   ],
   providers: [
-    TaskService
+    TaskService,
+    ProjectService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

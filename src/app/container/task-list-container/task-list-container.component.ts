@@ -1,27 +1,31 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {map} from 'rxjs/internal/operators';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {TaskService} from '../../tasks/task.service';
-import {Task, TaskListFilterType} from '../../model';
+import {Project, Task, TaskListFilterType} from '../../model';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {map, switchMap, take} from 'rxjs/operators';
+import {ProjectService} from '../../project/project.service';
 
 @Component({
-  selector: 'mac-task-listcontainer',
-  templateUrl: './task-listcontainer.component.html',
-  styleUrls: ['./task-listcontainer.component.css'],
+  selector: 'mac-task-list-container',
+  templateUrl: './task-list-container.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TaskListcontainerComponent {
-
+export class TaskListContainerComponent {
+  selectedProject: Observable<Project>;
   tasks: Observable<Task[]>;
   filteredTasks: Observable<Task[]>;
   taskFilterTypes: TaskListFilterType[] = ['all', 'open', 'done'];
   activeTaskFilterType = new BehaviorSubject<TaskListFilterType>('all');
 
-  constructor(private taskService: TaskService) {
-    this.tasks = this.taskService.getTasks();
-    this.filteredTasks = combineLatest(this.tasks,
-      this.activeTaskFilterType)
+  constructor(private taskService: TaskService, private projectService: ProjectService) {
+    this.selectedProject = this.projectService.getSelectedProject();
+
+    this.tasks = this.selectedProject.pipe(
+      switchMap((project) => this.taskService.getProjectTasks(project.id))
+    );
+
+    this.filteredTasks = combineLatest(this.tasks, this.activeTaskFilterType)
       .pipe(
         map(([tasks, activeTaskFilterType]) => {
           return tasks.filter((task: Task) => {
@@ -42,15 +46,19 @@ export class TaskListcontainerComponent {
   }
 
   addTask(title: string) {
-    const task: Task = {
-      title, done: false
-    };
-    this.taskService.addTask(task);
+    this.selectedProject
+      .pipe(
+        take(1)
+      )
+      .subscribe((project) => {
+        const task: Task = {
+          projectId: project.id, title, done: false
+        };
+        this.taskService.addTask(task);
+      });
   }
 
   updateTask(task: Task) {
     this.taskService.updateTask(task);
   }
 }
-
-

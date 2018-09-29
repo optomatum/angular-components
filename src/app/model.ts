@@ -1,8 +1,20 @@
 export interface Task {
-  id?: number;
-  title: string;
-  done: boolean;
+  readonly id?: number;
+  readonly projectId: number;
+  readonly title: string;
+  readonly done: boolean;
+}
+
+export type TaskListFilterType = 'all' | 'open' | 'done';
+
+export interface Project {
+  readonly id?: number;
+  readonly title: string;
+  readonly description: string;
 }
 
 
-export type TaskListFilterType = 'all' | 'open' | 'done';
+export interface Tab {
+  readonly id: any;
+  readonly title: string;
+}
